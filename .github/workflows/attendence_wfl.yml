@@ -1,1 +1,36 @@
+name: Attendance App CI/CD
 
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'attendance/**'
+      
+  workflow_dispatch:
+
+jobs:
+  build-and-test:
+    name: Build and Test Attendance App
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the code
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2: Build the application
+      - name: Build the Application
+        run: make build
+
+      # Step 3: Run the application locally
+      - name: Run Application Locally
+        env:
+          CONFIG_FILE: /path/to/config.yaml
+        run: |
+          ./attendance &
+          sleep 10 # Give some time for the app to start
+
+      # Step 4: Build Docker Image
+      - name: Build Docker Image
+        run: make image
